@@ -6,12 +6,16 @@
     "baseUrl": "./",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
     "paths": {
       "@eventon/shared": ["../../packages/shared/src"],
+      "@eventon/shared/*": ["../../packages/shared/src/*"],
       "@eventon/ui": ["../../packages/ui/src"],
-      "@eventon/db": ["../../packages/db/src"]
+      "@eventon/ui/*": ["../../packages/ui/src/*"],
+      "@eventon/db": ["../../packages/db/src"],
+      "@eventon/db/*": ["../../packages/db/src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

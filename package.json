@@ -8,9 +8,9 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "db:migrate": "pnpm --filter @eventon/db prisma migrate dev",
-    "db:seed": "pnpm --filter @eventon/db prisma db seed",
-    "db:generate": "pnpm --filter @eventon/db prisma generate",
+    "db:migrate":  "pnpm --filter ./packages/db exec prisma migrate dev",
+    "db:seed":     "pnpm --filter ./packages/db exec prisma db seed",
+    "db:generate": "pnpm --filter ./packages/db exec prisma generate",
     "security:sbom": "syft dir:. -o json > sbom.json"
   },
   "devDependencies": {
