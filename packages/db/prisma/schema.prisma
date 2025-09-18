@@ -7,10 +7,544 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrgRole {
+  OWNER
+  ADMIN
+  MANAGER
+  STAFF
+  VIEWER
+}
+
+enum MemberStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum AvailabilityType {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+enum JobStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  ARCHIVED
+}
+
+enum ShiftStatus {
+  PLANNED
+  OPEN
+  FILLED
+  COMPLETED
+  CANCELLED
+}
+
+enum AssignmentStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  COMPLETED
+  CANCELLED
+}
+
+enum EmbeddingSource {
+  STAFF_PROFILE
+  JOB
+  CLIENT
+  SHIFT
+}
+
+enum ConsentScope {
+  MARKETING
+  TERMS
+  DATA_PROCESSING
+  ACCOUNT_MANAGEMENT
+  CUSTOM
+}
+
+enum DsrType {
+  ACCESS
+  ERASURE
+  RECTIFICATION
+  PORTABILITY
+  OBJECTION
+  RESTRICTION
+}
+
+enum DsrStatus {
+  RECEIVED
+  VALIDATING
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  phone        String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  createdById  String?
+  createdBy    User?     @relation("UserCreatedBy", fields: [createdById], references: [id])
+  createdUsers User[]    @relation("UserCreatedBy")
+  updatedById  String?
+  updatedBy    User?     @relation("UserUpdatedBy", fields: [updatedById], references: [id])
+  updatedUsers User[]    @relation("UserUpdatedBy")
+  organisationsOwned   Organisation[] @relation("OrganisationOwner")
+  organisationsCreated Organisation[] @relation("OrganisationCreatedBy")
+  organisationsUpdated Organisation[] @relation("OrganisationUpdatedBy")
+  orgMemberships       OrgMember[]    @relation("OrgMemberUser")
+  orgMembersCreated    OrgMember[]    @relation("OrgMemberCreatedBy")
+  orgMembersUpdated    OrgMember[]    @relation("OrgMemberUpdatedBy")
+  staffProfiles        StaffProfile[] @relation("StaffProfileUser")
+  staffProfilesCreated StaffProfile[] @relation("StaffProfileCreatedBy")
+  staffProfilesUpdated StaffProfile[] @relation("StaffProfileUpdatedBy")
+  clientsCreated       Client[]       @relation("ClientCreatedBy")
+  clientsUpdated       Client[]       @relation("ClientUpdatedBy")
+  availabilitiesCreated Availability[] @relation("AvailabilityCreatedBy")
+  availabilitiesUpdated Availability[] @relation("AvailabilityUpdatedBy")
+  certificationsCreated Certification[] @relation("CertificationCreatedBy")
+  certificationsUpdated Certification[] @relation("CertificationUpdatedBy")
+  jobsCreated          Job[]          @relation("JobCreatedBy")
+  jobsUpdated          Job[]          @relation("JobUpdatedBy")
+  shiftsCreated        Shift[]        @relation("ShiftCreatedBy")
+  shiftsUpdated        Shift[]        @relation("ShiftUpdatedBy")
+  shiftAssignmentsCreated ShiftAssignment[] @relation("ShiftAssignmentCreatedBy")
+  shiftAssignmentsUpdated ShiftAssignment[] @relation("ShiftAssignmentUpdatedBy")
+  matchFeedbackReviews MatchFeedback[] @relation("MatchFeedbackReviewer")
+  matchFeedbackCreated MatchFeedback[] @relation("MatchFeedbackCreatedBy")
+  matchFeedbackUpdated MatchFeedback[] @relation("MatchFeedbackUpdatedBy")
+  featureWeightsCreated FeatureWeights[] @relation("FeatureWeightsCreatedBy")
+  featureWeightsUpdated FeatureWeights[] @relation("FeatureWeightsUpdatedBy")
+  auditTrail           AuditEvent[]     @relation("AuditEventActor")
+  auditEventsCreated   AuditEvent[]     @relation("AuditEventCreatedBy")
+  auditEventsUpdated   AuditEvent[]     @relation("AuditEventUpdatedBy")
+  consents             Consent[]        @relation("ConsentUser")
+  consentsCreated      Consent[]        @relation("ConsentCreatedBy")
+  consentsUpdated      Consent[]        @relation("ConsentUpdatedBy")
+  dsrRequests          DsrRequest[]     @relation("DsrRequestUser")
+  dsrRequestsCreated   DsrRequest[]     @relation("DsrRequestCreatedBy")
+  dsrRequestsUpdated   DsrRequest[]     @relation("DsrRequestUpdatedBy")
+  retentionPoliciesCreated RetentionPolicy[] @relation("RetentionPolicyCreatedBy")
+  retentionPoliciesUpdated RetentionPolicy[] @relation("RetentionPolicyUpdatedBy")
+
+  @@index([deletedAt])
+}
+
+model Organisation {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  industry    String?
+  timezone    String?
+  ownerId     String
+  owner       User     @relation("OrganisationOwner", fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  createdById String?
+  createdBy   User?    @relation("OrganisationCreatedBy", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?    @relation("OrganisationUpdatedBy", fields: [updatedById], references: [id])
+  members     OrgMember[]
+  clients     Client[]
+  jobs        Job[]
+  featureWeights FeatureWeights?
+  dsrRequests DsrRequest[]
+  auditEvents AuditEvent[]
+  retentionPolicies RetentionPolicy[]
+
+  @@index([ownerId])
+  @@index([deletedAt])
+}
+
+model OrgMember {
+  id              String       @id @default(cuid())
+  organisationId  String
+  organisation    Organisation @relation(fields: [organisationId], references: [id])
+  userId          String
+  user            User         @relation("OrgMemberUser", fields: [userId], references: [id])
+  role            OrgRole      @default(STAFF)
+  status          MemberStatus @default(INVITED)
+  title           String?
+  invitedAt       DateTime?
+  joinedAt        DateTime?
+  permissions     Json?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+  createdById     String?
+  createdBy       User?        @relation("OrgMemberCreatedBy", fields: [createdById], references: [id])
+  updatedById     String?
+  updatedBy       User?        @relation("OrgMemberUpdatedBy", fields: [updatedById], references: [id])
+  staffProfile    StaffProfile?
+
+  @@unique([organisationId, userId])
+  @@index([organisationId, status])
+  @@index([userId])
+}
+
+model Client {
+  id             String        @id @default(cuid())
+  organisationId String
+  organisation   Organisation  @relation(fields: [organisationId], references: [id])
+  name           String
+  email          String?
+  phone          String?
+  location       String?
+  status         ClientStatus  @default(ACTIVE)
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+  createdById    String?
+  createdBy      User?         @relation("ClientCreatedBy", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?         @relation("ClientUpdatedBy", fields: [updatedById], references: [id])
+  jobs           Job[]
+  embeddings     Embedding[]
+
+  @@index([organisationId, status])
+  @@index([organisationId, name])
+}
+
+model StaffProfile {
+  id                 String        @id @default(cuid())
+  organisationId     String
+  organisation       Organisation  @relation(fields: [organisationId], references: [id])
+  userId             String
+  user               User          @relation("StaffProfileUser", fields: [userId], references: [id])
+  orgMemberId        String?
+  orgMember          OrgMember?    @relation(fields: [orgMemberId], references: [id])
+  headline           String?
+  bio                String?
+  skills             String[]
+  yearsExperience    Int?
+  hourlyRate         Decimal?      @db.Decimal(10, 2)
+  preferredLocations String[]
+  languages          String[]
+  profileScore       Float?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  deletedAt          DateTime?
+  createdById        String?
+  createdBy          User?         @relation("StaffProfileCreatedBy", fields: [createdById], references: [id])
+  updatedById        String?
+  updatedBy          User?         @relation("StaffProfileUpdatedBy", fields: [updatedById], references: [id])
+  certifications     Certification[]
+  availability       Availability[]
+  shiftAssignments   ShiftAssignment[]
+  matchFeedback      MatchFeedback[]
+  embeddings         Embedding[]
+
+  @@unique([organisationId, userId])
+  @@index([orgMemberId])
+  @@index([organisationId])
+}
+
+model Certification {
+  id                   String        @id @default(cuid())
+  staffProfileId       String
+  staffProfile         StaffProfile  @relation(fields: [staffProfileId], references: [id])
+  name                 String
+  issuingOrganization  String?
+  issuedAt             DateTime?
+  expiresAt            DateTime?
+  credentialId         String?
+  credentialUrl        String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  deletedAt            DateTime?
+  createdById          String?
+  createdBy            User?         @relation("CertificationCreatedBy", fields: [createdById], references: [id])
+  updatedById          String?
+  updatedBy            User?         @relation("CertificationUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([staffProfileId])
+  @@index([expiresAt])
+}
+
+model Availability {
+  id             String           @id @default(cuid())
+  staffProfileId String
+  staffProfile   StaffProfile     @relation(fields: [staffProfileId], references: [id])
+  type           AvailabilityType @default(AVAILABLE)
+  startTime      DateTime
+  endTime        DateTime
+  timezone       String?
+  recurrenceRule String?
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
+  createdById    String?
+  createdBy      User?            @relation("AvailabilityCreatedBy", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?            @relation("AvailabilityUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([staffProfileId, startTime])
+}
+
+model Job {
+  id             String      @id @default(cuid())
+  organisationId String
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  clientId       String?
+  client         Client?     @relation(fields: [clientId], references: [id])
+  title          String
+  description    String?
+  status         JobStatus   @default(DRAFT)
+  location       String?
+  remote         Boolean     @default(false)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  budget         Decimal?    @db.Decimal(12, 2)
+  tags           String[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+  createdById    String?
+  createdBy      User?       @relation("JobCreatedBy", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?       @relation("JobUpdatedBy", fields: [updatedById], references: [id])
+  shifts         Shift[]
+  matchFeedback  MatchFeedback[]
+  embeddings     Embedding[]
+
+  @@index([organisationId, status])
+  @@index([clientId])
+  @@index([startsAt])
+}
+
+model Shift {
+  id            String      @id @default(cuid())
+  jobId         String
+  job           Job         @relation(fields: [jobId], references: [id])
+  title         String?
+  startTime     DateTime
+  endTime       DateTime
+  timezone      String?
+  status        ShiftStatus @default(PLANNED)
+  requiredStaff Int         @default(1)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+  createdById   String?
+  createdBy     User?       @relation("ShiftCreatedBy", fields: [createdById], references: [id])
+  updatedById   String?
+  updatedBy     User?       @relation("ShiftUpdatedBy", fields: [updatedById], references: [id])
+  assignments   ShiftAssignment[]
+  matchFeedback MatchFeedback[]
+  embeddings    Embedding[]
+
+  @@index([jobId])
+  @@index([startTime])
+}
+
+model ShiftAssignment {
+  id              String           @id @default(cuid())
+  shiftId         String
+  shift           Shift            @relation(fields: [shiftId], references: [id])
+  staffProfileId  String
+  staffProfile    StaffProfile     @relation(fields: [staffProfileId], references: [id])
+  status          AssignmentStatus @default(PENDING)
+  assignedAt      DateTime         @default(now())
+  respondedAt     DateTime?
+  notes           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+  createdById     String?
+  createdBy       User?            @relation("ShiftAssignmentCreatedBy", fields: [createdById], references: [id])
+  updatedById     String?
+  updatedBy       User?            @relation("ShiftAssignmentUpdatedBy", fields: [updatedById], references: [id])
+  matchFeedback   MatchFeedback[]
+
+  @@unique([shiftId, staffProfileId])
+  @@index([staffProfileId, status])
+}
+
+model Embedding {
+  id             String          @id @default(cuid())
+  source         EmbeddingSource
+  entityId       String
+  staffProfileId String?
+  staffProfile   StaffProfile?   @relation(fields: [staffProfileId], references: [id])
+  jobId          String?
+  job            Job?            @relation(fields: [jobId], references: [id])
+  shiftId        String?
+  shift          Shift?          @relation(fields: [shiftId], references: [id])
+  clientId       String?
+  client         Client?         @relation(fields: [clientId], references: [id])
+  vector         Unsupported("vector")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([source, entityId])
+  @@index([createdAt])
+}
+
+model MatchFeedback {
+  id                String          @id @default(cuid())
+  organisationId    String
+  organisation      Organisation    @relation(fields: [organisationId], references: [id])
+  staffProfileId    String?
+  staffProfile      StaffProfile?   @relation(fields: [staffProfileId], references: [id])
+  jobId             String?
+  job               Job?            @relation(fields: [jobId], references: [id])
+  shiftId           String?
+  shift             Shift?          @relation(fields: [shiftId], references: [id])
+  shiftAssignmentId String?
+  shiftAssignment   ShiftAssignment? @relation(fields: [shiftAssignmentId], references: [id])
+  reviewerId        String?
+  reviewer          User?           @relation("MatchFeedbackReviewer", fields: [reviewerId], references: [id])
+  score             Int?
+  rating            Float?
+  comment           String?
+  metadata          Json?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+  createdById       String?
+  createdBy         User?           @relation("MatchFeedbackCreatedBy", fields: [createdById], references: [id])
+  updatedById       String?
+  updatedBy         User?           @relation("MatchFeedbackUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([organisationId])
+  @@index([staffProfileId])
+  @@index([jobId])
+  @@index([shiftId])
+  @@index([shiftAssignmentId])
+}
+
+model FeatureWeights {
+  id                    String   @id @default(cuid())
+  organisationId        String   @unique
+  organisation          Organisation @relation(fields: [organisationId], references: [id])
+  skillsWeight          Float    @default(1)
+  availabilityWeight    Float    @default(1)
+  certificationWeight   Float    @default(1)
+  performanceWeight     Float    @default(1)
+  distanceWeight        Float    @default(1)
+  customWeights         Json?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  deletedAt             DateTime?
+  createdById           String?
+  createdBy             User?    @relation("FeatureWeightsCreatedBy", fields: [createdById], references: [id])
+  updatedById           String?
+  updatedBy             User?    @relation("FeatureWeightsUpdatedBy", fields: [updatedById], references: [id])
+}
+
+model Consent {
+  id                String        @id @default(cuid())
+  organisationId    String?
+  organisation      Organisation? @relation(fields: [organisationId], references: [id])
+  userId            String?
+  user              User?         @relation("ConsentUser", fields: [userId], references: [id])
+  subjectIdentifier String
+  scope             ConsentScope
+  grantedAt         DateTime      @default(now())
+  revokedAt         DateTime?
+  expiresAt         DateTime?
+  metadata          Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+  createdById       String?
+  createdBy         User?         @relation("ConsentCreatedBy", fields: [createdById], references: [id])
+  updatedById       String?
+  updatedBy         User?         @relation("ConsentUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([subjectIdentifier, scope])
+  @@index([userId])
+}
+
+model DsrRequest {
+  id                String        @id @default(cuid())
+  organisationId    String?
+  organisation      Organisation? @relation(fields: [organisationId], references: [id])
+  userId            String?
+  user              User?         @relation("DsrRequestUser", fields: [userId], references: [id])
+  subjectIdentifier String
+  type              DsrType
+  status            DsrStatus     @default(RECEIVED)
+  submittedAt       DateTime      @default(now())
+  dueAt             DateTime?
+  completedAt       DateTime?
+  notes             String?
+  metadata          Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+  createdById       String?
+  createdBy         User?         @relation("DsrRequestCreatedBy", fields: [createdById], references: [id])
+  updatedById       String?
+  updatedBy         User?         @relation("DsrRequestUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([organisationId, status])
+  @@index([subjectIdentifier])
+}
+
+model AuditEvent {
+  id             String        @id @default(cuid())
+  organisationId String?
+  organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  userId         String?
+  user           User?         @relation("AuditEventActor", fields: [userId], references: [id])
+  action         String
+  entityType     String
+  entityId       String?
+  description    String?
+  metadata       Json?
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  createdById    String?
+  createdBy      User?         @relation("AuditEventCreatedBy", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?         @relation("AuditEventUpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([organisationId])
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model RetentionPolicy {
+  id                 String        @id @default(cuid())
+  organisationId     String?
+  organisation       Organisation? @relation(fields: [organisationId], references: [id])
+  dataCategory       String
+  description        String?
+  retentionPeriodDays Int
+  enforcementAction  String?
+  active             Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  deletedAt          DateTime?
+  createdById        String?
+  createdBy          User?        @relation("RetentionPolicyCreatedBy", fields: [createdById], references: [id])
+  updatedById        String?
+  updatedBy          User?        @relation("RetentionPolicyUpdatedBy", fields: [updatedById], references: [id])
+
+  @@unique([organisationId, dataCategory])
 }
