@@ -1,0 +1,19 @@
+{
+  "name": "@eventon/db",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "prisma:seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.12.1"
+  },
+  "devDependencies": {
+    "prisma": "^5.12.1",
+    "tsx": "^4.7.0",
+    "typescript": "5.3.3"
+  }
+}

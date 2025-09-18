@@ -1,0 +1,15 @@
+{
+  "extends": "@eventon/config/tsconfig/base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/api.tsbuildinfo",
+    "baseUrl": "./",
+    "paths": {
+      "@eventon/shared": ["../../packages/shared/src"],
+      "@eventon/ui": ["../../packages/ui/src"],
+      "@eventon/db": ["../../packages/db/src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
