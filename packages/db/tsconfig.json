@@ -1,8 +1,10 @@
 {
   "extends": "@eventon/config/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["src", "prisma/seed.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "prisma/seed.ts"]
 }
