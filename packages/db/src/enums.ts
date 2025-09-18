@@ -1,0 +1,82 @@
+export enum OrgRole {
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  STAFF = 'STAFF',
+  VIEWER = 'VIEWER',
+}
+
+export enum MemberStatus {
+  INVITED = 'INVITED',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum ClientStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum AvailabilityType {
+  AVAILABLE = 'AVAILABLE',
+  UNAVAILABLE = 'UNAVAILABLE',
+}
+
+export enum JobStatus {
+  DRAFT = 'DRAFT',
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  ARCHIVED = 'ARCHIVED',
+}
+
+export enum ShiftStatus {
+  PLANNED = 'PLANNED',
+  OPEN = 'OPEN',
+  FILLED = 'FILLED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum AssignmentStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  DECLINED = 'DECLINED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum EmbeddingSource {
+  STAFF_PROFILE = 'STAFF_PROFILE',
+  JOB = 'JOB',
+  CLIENT = 'CLIENT',
+  SHIFT = 'SHIFT',
+}
+
+export enum ConsentScope {
+  MARKETING = 'MARKETING',
+  TERMS = 'TERMS',
+  DATA_PROCESSING = 'DATA_PROCESSING',
+  ACCOUNT_MANAGEMENT = 'ACCOUNT_MANAGEMENT',
+  CUSTOM = 'CUSTOM',
+}
+
+export enum DsrType {
+  ACCESS = 'ACCESS',
+  ERASURE = 'ERASURE',
+  RECTIFICATION = 'RECTIFICATION',
+  PORTABILITY = 'PORTABILITY',
+  OBJECTION = 'OBJECTION',
+  RESTRICTION = 'RESTRICTION',
+}
+
+export enum DsrStatus {
+  RECEIVED = 'RECEIVED',
+  VALIDATING = 'VALIDATING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  REJECTED = 'REJECTED',
+}
