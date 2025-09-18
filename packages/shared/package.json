@@ -1,0 +1,15 @@
+{
+  "name": "@eventon/shared",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}

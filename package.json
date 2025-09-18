@@ -1,0 +1,19 @@
+{
+  "name": "eventon0.2-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@8.15.4",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:migrate": "pnpm --filter @eventon/db prisma migrate dev",
+    "db:seed": "pnpm --filter @eventon/db prisma db seed",
+    "db:generate": "pnpm --filter @eventon/db prisma generate",
+    "security:sbom": "syft dir:. -o json > sbom.json"
+  },
+  "devDependencies": {
+    "turbo": "^1.12.3"
+  }
+}
