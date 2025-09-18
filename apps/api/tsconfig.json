@@ -4,12 +4,22 @@
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.cache/api.tsbuildinfo",
     "baseUrl": "./",
+
+    // ✅ NestJS / decorators
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+
+    // Aliases to workspace packages
     "paths": {
       "@eventon/shared": ["../../packages/shared/src"],
+      "@eventon/shared/*": ["../../packages/shared/src/*"],
       "@eventon/ui": ["../../packages/ui/src"],
-      "@eventon/db": ["../../packages/db/src"]
+      "@eventon/ui/*": ["../../packages/ui/src/*"],
+      "@eventon/db": ["../../packages/db/src"],
+      "@eventon/db/*": ["../../packages/db/src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

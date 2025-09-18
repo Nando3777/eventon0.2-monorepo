@@ -1,29 +1,29 @@
+// apps/api/src/main.ts
 import 'reflect-metadata';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import helmet from '@fastify/helmet';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+  );
 
-  const origins = (process.env.CORS_ORIGINS ?? '')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
+  await app.register(helmet);
+  const origins = (process.env.CORS_ORIGINS || '').split(',').filter(Boolean);
+  app.enableCors({ origin: origins.length ? origins : true });
 
-  app.enableCors({
-    origin: origins.length > 0 ? origins : true,
-    credentials: true,
-  });
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
-  const port = Number(process.env.PORT ?? 4000);
-  await app.listen({ port, host: '0.0.0.0' });
+  const config = new DocumentBuilder().setTitle('EventOn API').setVersion('0.1.0').build();
+  const doc = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, doc);
+
+  const port = Number(process.env.PORT || 4000);
+  await app.listen(port, '0.0.0.0');
 }
-
-bootstrap().catch((error) => {
-  // eslint-disable-next-line no-console
-  console.error('API bootstrap failed', error);
-  process.exit(1);
-});
+bootstrap();
