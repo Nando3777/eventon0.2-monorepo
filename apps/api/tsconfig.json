@@ -4,6 +4,8 @@
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.cache/api.tsbuildinfo",
     "baseUrl": "./",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@eventon/shared": ["../../packages/shared/src"],
       "@eventon/ui": ["../../packages/ui/src"],
