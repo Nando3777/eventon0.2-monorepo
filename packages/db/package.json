@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "scripts": {
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate",
-    "prisma:seed": "tsx prisma/seed.ts"
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
-  "dependencies": {
-    "@prisma/client": "^5.12.1"
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=5"
   },
   "devDependencies": {
-    "prisma": "^5.12.1",
-    "tsx": "^4.7.0",
-    "typescript": "5.3.3"
+    "typescript": "^5.3.3"
   }
 }

@@ -1,82 +1,15 @@
-export enum OrgRole {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  STAFF = 'STAFF',
-  VIEWER = 'VIEWER',
-}
+// packages/db/src/enums.ts
+// Re-export **types only** from Prisma. These are erased at runtime so
+// CJS apps (ts-node) won’t try to load this ESM package.
+// Usage from consumers: `import type { OrgRole } from '@eventon/db';`
 
-export enum MemberStatus {
-  INVITED = 'INVITED',
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  ARCHIVED = 'ARCHIVED',
-}
+// Prisma v5 exposes enum types under $Enums.
+export type OrgRole = import('@prisma/client').$Enums.OrgRole;
+export type AssignmentStatus = import('@prisma/client').$Enums.AssignmentStatus;
+export type ConsentScope = import('@prisma/client').$Enums.ConsentScope;
+export type DsrStatus = import('@prisma/client').$Enums.DsrStatus;
+export type DsrType = import('@prisma/client').$Enums.DsrType;
 
-export enum ClientStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  ARCHIVED = 'ARCHIVED',
-}
-
-export enum AvailabilityType {
-  AVAILABLE = 'AVAILABLE',
-  UNAVAILABLE = 'UNAVAILABLE',
-}
-
-export enum JobStatus {
-  DRAFT = 'DRAFT',
-  OPEN = 'OPEN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  ARCHIVED = 'ARCHIVED',
-}
-
-export enum ShiftStatus {
-  PLANNED = 'PLANNED',
-  OPEN = 'OPEN',
-  FILLED = 'FILLED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
-
-export enum AssignmentStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  DECLINED = 'DECLINED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
-
-export enum EmbeddingSource {
-  STAFF_PROFILE = 'STAFF_PROFILE',
-  JOB = 'JOB',
-  CLIENT = 'CLIENT',
-  SHIFT = 'SHIFT',
-}
-
-export enum ConsentScope {
-  MARKETING = 'MARKETING',
-  TERMS = 'TERMS',
-  DATA_PROCESSING = 'DATA_PROCESSING',
-  ACCOUNT_MANAGEMENT = 'ACCOUNT_MANAGEMENT',
-  CUSTOM = 'CUSTOM',
-}
-
-export enum DsrType {
-  ACCESS = 'ACCESS',
-  ERASURE = 'ERASURE',
-  RECTIFICATION = 'RECTIFICATION',
-  PORTABILITY = 'PORTABILITY',
-  OBJECTION = 'OBJECTION',
-  RESTRICTION = 'RESTRICTION',
-}
-
-export enum DsrStatus {
-  RECEIVED = 'RECEIVED',
-  VALIDATING = 'VALIDATING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  REJECTED = 'REJECTED',
-}
+// If you want to expose more enum types, follow the same pattern:
+//
+// export type SomeEnum = import('@prisma/client').$Enums.SomeEnum;

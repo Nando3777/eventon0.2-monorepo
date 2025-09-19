@@ -1,0 +1,15 @@
+{
+  "extends": "../../packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "module": "ES2022",
+    "target": "ES2022",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "declarationMap": true
+  },
+  "include": ["src/**/*.ts"]
+}
