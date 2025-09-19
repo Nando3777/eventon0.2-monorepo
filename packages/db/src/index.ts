@@ -1,7 +1,4 @@
-export { PrismaClient } from '@prisma/client';
-export type { Prisma } from '@prisma/client';
-
-export {
+export type {
   OrgRole,
   MemberStatus,
   ClientStatus,
@@ -13,4 +10,18 @@ export {
   ConsentScope,
   DsrType,
   DsrStatus,
-} from './enums';
+} from "./enums";
+
+export {
+  OrgRoleValues,
+  MemberStatusValues,
+  ClientStatusValues,
+  AvailabilityTypeValues,
+  JobStatusValues,
+  ShiftStatusValues,
+  AssignmentStatusValues,
+  EmbeddingSourceValues,
+  ConsentScopeValues,
+  DsrTypeValues,
+  DsrStatusValues,
+} from "./enums.js";

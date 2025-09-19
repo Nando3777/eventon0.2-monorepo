@@ -1,82 +1,37 @@
-export enum OrgRole {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  STAFF = 'STAFF',
-  VIEWER = 'VIEWER',
-}
+/**
+ * Type-only enums (string unions) + value arrays.
+ * No Prisma imports here; this file must compile with zero runtime code.
+ */
 
-export enum MemberStatus {
-  INVITED = 'INVITED',
-  ACTIVE = 'ACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  ARCHIVED = 'ARCHIVED',
-}
+export type OrgRole = 'OWNER' | 'ADMIN' | 'MANAGER' | 'STAFF' | 'VIEWER';
+export const OrgRoleValues = ['OWNER', 'ADMIN', 'MANAGER', 'STAFF', 'VIEWER'] as const;
 
-export enum ClientStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  ARCHIVED = 'ARCHIVED',
-}
+export type MemberStatus = 'INVITED' | 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+export const MemberStatusValues = ['INVITED', 'ACTIVE', 'SUSPENDED', 'ARCHIVED'] as const;
 
-export enum AvailabilityType {
-  AVAILABLE = 'AVAILABLE',
-  UNAVAILABLE = 'UNAVAILABLE',
-}
+export type ClientStatus = 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+export const ClientStatusValues = ['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const;
 
-export enum JobStatus {
-  DRAFT = 'DRAFT',
-  OPEN = 'OPEN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  ARCHIVED = 'ARCHIVED',
-}
+export type AvailabilityType = 'AVAILABLE' | 'UNAVAILABLE';
+export const AvailabilityTypeValues = ['AVAILABLE', 'UNAVAILABLE'] as const;
 
-export enum ShiftStatus {
-  PLANNED = 'PLANNED',
-  OPEN = 'OPEN',
-  FILLED = 'FILLED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
+export type JobStatus = 'DRAFT' | 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'ARCHIVED';
+export const JobStatusValues = ['DRAFT', 'OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'ARCHIVED'] as const;
 
-export enum AssignmentStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  DECLINED = 'DECLINED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
+export type ShiftStatus = 'PLANNED' | 'OPEN' | 'FILLED' | 'COMPLETED' | 'CANCELLED';
+export const ShiftStatusValues = ['PLANNED', 'OPEN', 'FILLED', 'COMPLETED', 'CANCELLED'] as const;
 
-export enum EmbeddingSource {
-  STAFF_PROFILE = 'STAFF_PROFILE',
-  JOB = 'JOB',
-  CLIENT = 'CLIENT',
-  SHIFT = 'SHIFT',
-}
+export type AssignmentStatus = 'PENDING' | 'CONFIRMED' | 'DECLINED' | 'COMPLETED' | 'CANCELLED';
+export const AssignmentStatusValues = ['PENDING', 'CONFIRMED', 'DECLINED', 'COMPLETED', 'CANCELLED'] as const;
 
-export enum ConsentScope {
-  MARKETING = 'MARKETING',
-  TERMS = 'TERMS',
-  DATA_PROCESSING = 'DATA_PROCESSING',
-  ACCOUNT_MANAGEMENT = 'ACCOUNT_MANAGEMENT',
-  CUSTOM = 'CUSTOM',
-}
+export type EmbeddingSource = 'STAFF_PROFILE' | 'JOB' | 'CLIENT' | 'SHIFT';
+export const EmbeddingSourceValues = ['STAFF_PROFILE', 'JOB', 'CLIENT', 'SHIFT'] as const;
 
-export enum DsrType {
-  ACCESS = 'ACCESS',
-  ERASURE = 'ERASURE',
-  RECTIFICATION = 'RECTIFICATION',
-  PORTABILITY = 'PORTABILITY',
-  OBJECTION = 'OBJECTION',
-  RESTRICTION = 'RESTRICTION',
-}
+export type ConsentScope = 'MARKETING' | 'TERMS' | 'DATA_PROCESSING' | 'ACCOUNT_MANAGEMENT' | 'CUSTOM';
+export const ConsentScopeValues = ['MARKETING', 'TERMS', 'DATA_PROCESSING', 'ACCOUNT_MANAGEMENT', 'CUSTOM'] as const;
 
-export enum DsrStatus {
-  RECEIVED = 'RECEIVED',
-  VALIDATING = 'VALIDATING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  REJECTED = 'REJECTED',
-}
+export type DsrType = 'ACCESS' | 'ERASURE' | 'RECTIFICATION' | 'PORTABILITY' | 'OBJECTION' | 'RESTRICTION';
+export const DsrTypeValues = ['ACCESS', 'ERASURE', 'RECTIFICATION', 'PORTABILITY', 'OBJECTION', 'RESTRICTION'] as const;
+
+export type DsrStatus = 'RECEIVED' | 'VALIDATING' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED';
+export const DsrStatusValues = ['RECEIVED', 'VALIDATING', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'] as const;

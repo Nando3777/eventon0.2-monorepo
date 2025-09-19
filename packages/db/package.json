@@ -3,32 +3,30 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./enums": {
       "types": "./dist/enums.d.ts",
-      "import": "./dist/enums.js"
+      "import": "./dist/enums.js",
+      "default": "./dist/enums.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
-    "build": "tsc --project tsconfig.json && node ./scripts/fix-exports.mjs",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist"
   },
-  "dependencies": {
-    "@prisma/client": "^5.12.1"
+  "peerDependencies": {
+    "@prisma/client": ">=5"
   },
   "devDependencies": {
-    "@eventon/config": "workspace:*",
-    "@types/node": "^20.10.6",
-    "prisma": "^5.12.1",
-    "tsx": "^4.7.0",
     "typescript": "5.3.3"
   }
 }
