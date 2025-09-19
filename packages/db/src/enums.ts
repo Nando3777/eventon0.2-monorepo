@@ -1,15 +1,37 @@
-// packages/db/src/enums.ts
-// Re-export **types only** from Prisma. These are erased at runtime so
-// CJS apps (ts-node) won’t try to load this ESM package.
-// Usage from consumers: `import type { OrgRole } from '@eventon/db';`
+/**
+ * Type-only enums (string unions) + value arrays.
+ * No Prisma imports here; this file must compile with zero runtime code.
+ */
 
-// Prisma v5 exposes enum types under $Enums.
-export type OrgRole = import('@prisma/client').$Enums.OrgRole;
-export type AssignmentStatus = import('@prisma/client').$Enums.AssignmentStatus;
-export type ConsentScope = import('@prisma/client').$Enums.ConsentScope;
-export type DsrStatus = import('@prisma/client').$Enums.DsrStatus;
-export type DsrType = import('@prisma/client').$Enums.DsrType;
+export type OrgRole = 'OWNER' | 'ADMIN' | 'MANAGER' | 'STAFF' | 'VIEWER';
+export const OrgRoleValues = ['OWNER', 'ADMIN', 'MANAGER', 'STAFF', 'VIEWER'] as const;
 
-// If you want to expose more enum types, follow the same pattern:
-//
-// export type SomeEnum = import('@prisma/client').$Enums.SomeEnum;
+export type MemberStatus = 'INVITED' | 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+export const MemberStatusValues = ['INVITED', 'ACTIVE', 'SUSPENDED', 'ARCHIVED'] as const;
+
+export type ClientStatus = 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+export const ClientStatusValues = ['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const;
+
+export type AvailabilityType = 'AVAILABLE' | 'UNAVAILABLE';
+export const AvailabilityTypeValues = ['AVAILABLE', 'UNAVAILABLE'] as const;
+
+export type JobStatus = 'DRAFT' | 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'ARCHIVED';
+export const JobStatusValues = ['DRAFT', 'OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'ARCHIVED'] as const;
+
+export type ShiftStatus = 'PLANNED' | 'OPEN' | 'FILLED' | 'COMPLETED' | 'CANCELLED';
+export const ShiftStatusValues = ['PLANNED', 'OPEN', 'FILLED', 'COMPLETED', 'CANCELLED'] as const;
+
+export type AssignmentStatus = 'PENDING' | 'CONFIRMED' | 'DECLINED' | 'COMPLETED' | 'CANCELLED';
+export const AssignmentStatusValues = ['PENDING', 'CONFIRMED', 'DECLINED', 'COMPLETED', 'CANCELLED'] as const;
+
+export type EmbeddingSource = 'STAFF_PROFILE' | 'JOB' | 'CLIENT' | 'SHIFT';
+export const EmbeddingSourceValues = ['STAFF_PROFILE', 'JOB', 'CLIENT', 'SHIFT'] as const;
+
+export type ConsentScope = 'MARKETING' | 'TERMS' | 'DATA_PROCESSING' | 'ACCOUNT_MANAGEMENT' | 'CUSTOM';
+export const ConsentScopeValues = ['MARKETING', 'TERMS', 'DATA_PROCESSING', 'ACCOUNT_MANAGEMENT', 'CUSTOM'] as const;
+
+export type DsrType = 'ACCESS' | 'ERASURE' | 'RECTIFICATION' | 'PORTABILITY' | 'OBJECTION' | 'RESTRICTION';
+export const DsrTypeValues = ['ACCESS', 'ERASURE', 'RECTIFICATION', 'PORTABILITY', 'OBJECTION', 'RESTRICTION'] as const;
+
+export type DsrStatus = 'RECEIVED' | 'VALIDATING' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED';
+export const DsrStatusValues = ['RECEIVED', 'VALIDATING', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'] as const;

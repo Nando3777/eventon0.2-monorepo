@@ -1,15 +1,15 @@
 {
-  "extends": "../../packages/config/tsconfig/base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
     "rootDir": "./src",
+    "outDir": "./dist",
     "declaration": true,
+    "declarationMap": true,
     "emitDeclarationOnly": false,
     "module": "ES2022",
     "target": "ES2022",
     "moduleResolution": "Node",
-    "skipLibCheck": true,
-    "declarationMap": true
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts"]
 }
